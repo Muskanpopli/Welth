@@ -3,7 +3,11 @@
 A powerful full stack **AI Finance Platform** built using modern web technologies like **Next.js**, **Supabase**, **TailwindCSS**, **Prisma**, **Inngest**, **ArcJet**, and **Shadcn UI**.
 
 ---
+## 📸 Screenshot
 
+![Screenshot](./public/screenshot.PNG)
+
+---
 ## 🚀 Tech Stack
 
 - **Framework:** Next.js
