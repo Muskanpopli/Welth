@@ -5,7 +5,7 @@ A powerful full stack **AI Finance Platform** built using modern web technologie
 ---
 ## 📸 Screenshot
 
-![Screenshot](public/screenshot.png)
+![Screenshot](public/screenshot1.png)
 
 ---
 ## 🚀 Tech Stack
