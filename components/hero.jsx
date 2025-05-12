@@ -33,8 +33,9 @@ const HeroSection = () => {
           Manage Your Finances <br /> with Intelligence
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-        A smart, AI-powered financial management platform that provides real-time 
-        insights to help you monitor, evaluate, and improve your spending habits.
+          A smart, AI-powered financial management platform that provides
+          real-time insights to help you monitor, evaluate, and improve your
+          spending habits.
         </p>
         <div className="flex justify-center space-x-4">
           <Link href="/dashboard">
@@ -51,9 +52,9 @@ const HeroSection = () => {
         <div className="hero-image-wrapper mt-5 md:mt-0">
           <div ref={imageRef} className="hero-image">
             <Image
-              src="/ai-robo.jpg"
+              src="/wealth-app-ui.svg"
               width={1200}
-              height={500}
+              height={400}
               alt="Dashboard Preview"
               className="rounded-lg shadow-2xl border mx-auto"
               priority
