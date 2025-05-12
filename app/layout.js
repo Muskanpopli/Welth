@@ -8,16 +8,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Welth",
   description: "Your all-in-one finance hub",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <link rel="manifest" href="/manifest.json" />
+        </head>
         <body className={`${inter.className}`}>
-          {/*header*/}
           <Header />
-          {/*header*/}
           <main className="min-h-screen">{children}</main>
           <Toaster richColors />
           {/*footer*/}
