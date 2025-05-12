@@ -8,13 +8,13 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/logo-square.png",
-      "type": "image/png",
+      "src": "/logo-square.webp",
+      "type": "image/webp",
       "sizes": "192x192"
     },
     {
-      "src": "/logo-square.png",
-      "type": "image/png",
+      "src": "/logo-square.webp",
+      "type": "image/webp",
       "sizes": "512x512"
     }
   ],
@@ -23,7 +23,7 @@
       "src": "/screenshot1.png",
       "type": "image/png",
       "form_factor": "wide",
-      "sizes": "1871x960"
+      "sizes": "1198x883"
     },
     {
       "src": "/mobile.png",
