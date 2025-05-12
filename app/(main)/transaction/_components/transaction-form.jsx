@@ -95,6 +95,15 @@ export function AddTransactionForm({
   };
 
   const handleScanComplete = (scannedData) => {
+    setValue("amount", "");
+    setValue("date", "");
+    setValue("description", "");
+    setValue("category", "");
+    if (!scannedData.amount || !scannedData.description) {
+      toast.error("Please use a valid Receipt");
+      return;
+    }
+
     if (scannedData) {
       setValue("amount", scannedData.amount.toString());
       setValue("date", new Date(scannedData.date));
@@ -305,7 +314,7 @@ export function AddTransactionForm({
       )}
 
       {/* Actions */}
-      <div className="flex gap-4">
+      <div className="flex  flex-col gap-4">
         <Button
           type="button"
           variant="outline"
