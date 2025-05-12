@@ -1,0 +1,179 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9c27b0" />
+      <stop offset="100%" stop-color="#6200ea" />
+    </linearGradient>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f5f5f5" />
+    </linearGradient>
+    <filter id="deviceShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="5" />
+      <feOffset dx="0" dy="5" result="offsetblur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="800" height="600" fill="#f8f9fa" />
+  
+  <!-- Main Title -->
+  <text x="400" y="60" font-family="Arial" font-weight="bold" font-size="36" fill="#212529" text-anchor="middle">WealthWise</text>
+  <text x="400" y="100" font-family="Arial" font-size="20" fill="#6c757d" text-anchor="middle">Cross-platform financial management</text>
+  
+  <!-- Devices Display -->
+  
+  <!-- Phone -->
+  <g transform="translate(100, 170)">
+    <!-- Phone Frame -->
+    <rect x="0" y="0" width="160" height="320" rx="20" fill="#212529" filter="url(#deviceShadow)" />
+    <rect x="8" y="8" width="144" height="304" rx="12" fill="url(#purpleGradient)" />
+    
+    <!-- Status Bar -->
+    <rect x="8" y="8" width="144" height="20" rx="12" fill="rgba(0,0,0,0.2)" />
+    <circle cx="20" cy="18" r="4" fill="#ffffff" />
+    <rect x="120" y="15" width="10" height="6" rx="1" fill="#ffffff" />
+    <text x="90" y="20" font-family="Arial" font-size="8" fill="#ffffff">9:41</text>
+    
+    <!-- App Content -->
+    <text x="20" y="50" font-family="Arial" font-weight="bold" font-size="14" fill="#ffffff">Overview</text>
+    
+    <!-- Balance Card -->
+    <rect x="20" y="65" width="120" height="80" rx="8" fill="#ffffff" />
+    <text x="32" y="85" font-family="Arial" font-size="10" fill="#6c757d">Total Balance</text>
+    <text x="32" y="105" font-family="Arial" font-weight="bold" font-size="16" fill="#212529">$32,456</text>
+    <text x="32" y="125" font-family="Arial" font-size="10" fill="#28a745">+$1,245 (3.8%)</text>
+    
+    <!-- Portfolio List -->
+    <rect x="20" y="155" width="120" height="40" rx="8" fill="#ffffff" />
+    <text x="32" y="172" font-family="Arial" font-weight="bold" font-size="10" fill="#212529">Investments</text>
+    <text x="32" y="187" font-family="Arial" font-size="9" fill="#6c757d">5 stocks, 2 ETFs</text>
+    <text x="110" y="177" font-family="Arial" font-weight="bold" font-size="10" fill="#212529">→</text>
+    
+    <rect x="20" y="205" width="120" height="40" rx="8" fill="#ffffff" />
+    <text x="32" y="222" font-family="Arial" font-weight="bold" font-size="10" fill="#212529">Savings</text>
+    <text x="32" y="237" font-family="Arial" font-size="9" fill="#6c757d">2 accounts</text>
+    <text x="110" y="227" font-family="Arial" font-weight="bold" font-size="10" fill="#212529">→</text>
+    
+    <rect x="20" y="255" width="120" height="40" rx="8" fill="#ffffff" />
+    <text x="32" y="272" font-family="Arial" font-weight="bold" font-size="10" fill="#212529">Crypto</text>
+    <text x="32" y="287" font-family="Arial" font-size="9" fill="#6c757d">3 currencies</text>
+    <text x="110" y="277" font-family="Arial" font-weight="bold" font-size="10" fill="#212529">→</text>
+    
+    <!-- Navigation -->
+    <rect x="8" y="312" width="144" height="0.5" fill="#ffffff" opacity="0.3" />
+    <circle cx="40" cy="322" r="3" fill="#ffffff" />
+    <circle cx="80" cy="322" r="3" fill="#ffffff" opacity="0.5" />
+    <circle cx="120" cy="322" r="3" fill="#ffffff" opacity="0.5" />
+  </g>
+  
+  <!-- Tablet -->
+  <g transform="translate(280, 150)">
+    <!-- Tablet Frame -->
+    <rect x="0" y="0" width="350" height="360" rx="20" fill="#212529" filter="url(#deviceShadow)" />
+    <rect x="10" y="10" width="330" height="340" rx="10" fill="url(#purpleGradient)" />
+    
+    <!-- Status Bar -->
+    <rect x="10" y="10" width="330" height="25" rx="10" fill="rgba(0,0,0,0.2)" />
+    <circle cx="25" cy="22" r="4" fill="#ffffff" />
+    <rect x="310" y="19" width="10" height="6" rx="1" fill="#ffffff" />
+    <text x="280" y="24" font-family="Arial" font-size="10" fill="#ffffff">9:41</text>
+    
+    <!-- App Header -->
+    <text x="25" y="55" font-family="Arial" font-weight="bold" font-size="16" fill="#ffffff">Dashboard</text>
+    <text x="320" y="55" font-family="Arial" font-size="14" fill="#ffffff" text-anchor="end">Search</text>
+    
+    <!-- Balance Card -->
+    <rect x="25" y="70" width="150" height="80" rx="10" fill="#ffffff" />
+    <text x="40" y="90" font-family="Arial" font-size="12" fill="#6c757d">Current Balance</text>
+    <text x="40" y="115" font-family="Arial" font-weight="bold" font-size="22" fill="#212529">$47,952</text>
+    <text x="40" y="135" font-family="Arial" font-size="12" fill="#28a745">↑ 2.3%</text>
+    
+    <!-- Portfolio Performance -->
+    <rect x="185" y="70" width="130" height="80" rx="10" fill="#ffffff" />
+    <text x="200" y="90" font-family="Arial" font-size="12" fill="#6c757d">Portfolio Return</text>
+    <text x="200" y="115" font-family="Arial" font-weight="bold" font-size="22" fill="#212529">$3,219</text>
+    <text x="200" y="135" font-family="Arial" font-size="12" fill="#28a745">↑ 6.7%</text>
+    
+    <!-- Activity Chart -->
+    <rect x="25" y="160" width="290" height="180" rx="10" fill="#ffffff" />
+    <text x="40" y="185" font-family="Arial" font-weight="bold" font-size="14" fill="#212529">Portfolio Activity</text>
+    
+    <!-- Chart Lines -->
+    <line x1="40" y1="320" x2="300" y2="320" stroke="#e9ecef" stroke-width="1" />
+    <line x1="40" y1="290" x2="300" y2="290" stroke="#e9ecef" stroke-width="1" />
+    <line x1="40" y1="260" x2="300" y2="260" stroke="#e9ecef" stroke-width="1" />
+    <line x1="40" y1="230" x2="300" y2="230" stroke="#e9ecef" stroke-width="1" />
+    
+    <!-- Chart Data -->
+    <polyline points="40,290 60,280 80,285 100,270 120,275 140,255 160,260 180,245 200,230 220,240 240,225 260,215 280,220 300,210" 
+          fill="none" stroke="#9c27b0" stroke-width="3" />
+          
+    <!-- Bar Chart -->
+    <rect x="60" y="300" width="10" height="20" fill="#9c27b0" opacity="0.7" />
+    <rect x="100" y="290" width="10" height="30" fill="#9c27b0" opacity="0.7" />
+    <rect x="140" y="280" width="10" height="40" fill="#9c27b0" opacity="0.7" />
+    <rect x="180" y="285" width="10" height="35" fill="#9c27b0" opacity="0.7" />
+    <rect x="220" y="270" width="10" height="50" fill="#9c27b0" opacity="0.7" />
+    <rect x="260" y="260" width="10" height="60" fill="#9c27b0" opacity="0.7" />
+    
+    <!-- Time Intervals -->
+    <text x="55" y="335" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">Apr</text>
+    <text x="95" y="335" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">May</text>
+    <text x="135" y="335" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">Jun</text>
+    <text x="175" y="335" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">Jul</text>
+    <text x="215" y="335" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">Aug</text>
+    <text x="255" y="335" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">Sep</text>
+    <text x="295" y="335" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">Oct</text>
+  </g>
+  
+  <!-- Desktop/Monitor -->
+  <g transform="translate(650, 200)">
+    <!-- Monitor Frame -->
+    <rect x="0" y="0" width="130" height="260" rx="10" fill="#212529" filter="url(#deviceShadow)" />
+    <rect x="5" y="5" width="120" height="210" rx="5" fill="url(#purpleGradient)" />
+    
+    <!-- Monitor Stand -->
+    <rect x="50" y="215" width="30" height="10" rx="2" fill="#212529" />
+    <rect x="60" y="225" width="10" height="25" rx="2" fill="#212529" />
+    <rect x="45" y="250" width="40" height="5" rx="2" fill="#212529" />
+    
+    <!-- Stock Chart Line -->
+    <polyline points="15,155 30,140 45,160 60,120 75,140 90,115 105,105 120,95" 
+          fill="none" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+          
+    <!-- City Skyline Visualization -->
+    <rect x="15" y="170" width="5" height="40" fill="#ffffff" opacity="0.2" />
+    <rect x="25" y="160" width="5" height="50" fill="#ffffff" opacity="0.2" />
+    <rect x="35" y="180" width="5" height="30" fill="#ffffff" opacity="0.2" />
+    <rect x="45" y="150" width="5" height="60" fill="#ffffff" opacity="0.2" />
+    <rect x="55" y="170" width="5" height="40" fill="#ffffff" opacity="0.2" />
+    <rect x="65" y="140" width="5" height="70" fill="#ffffff" opacity="0.2" />
+    <rect x="75" y="155" width="5" height="55" fill="#ffffff" opacity="0.2" />
+    <rect x="85" y="130" width="5" height="80" fill="#ffffff" opacity="0.2" />
+    <rect x="95" y="160" width="5" height="50" fill="#ffffff" opacity="0.2" />
+    <rect x="105" y="145" width="5" height="65" fill="#ffffff" opacity="0.2" />
+    
+    <!-- GUI Elements -->
+    <rect x="15" y="15" width="110" height="20" rx="5" fill="#ffffff" opacity="0.2" />
+    <text x="25" y="28" font-family="Arial" font-weight="bold" font-size="8" fill="#ffffff">Portfolio Overview</text>
+    
+    <rect x="15" y="45" width="50" height="40" rx="5" fill="#ffffff" opacity="0.2" />
+    <rect x="75" y="45" width="50" height="40" rx="5" fill="#ffffff" opacity="0.2" />
+    
+    <circle cx="30" cy="65" r="10" fill="#ffffff" opacity="0.2" />
+    <circle cx="90" cy="65" r="10" fill="#ffffff" opacity="0.2" />
+  </g>
+  
+  <!-- Caption -->
+  <text x="400" y="550" font-family="Arial" font-weight="bold" font-size="24" fill="#212529" text-anchor="middle">Financial Management Across All Your Devices</text>
+  <text x="400" y="580" font-family="Arial" font-size="16" fill="#6c757d" text-anchor="middle">Track, Invest, and Grow Your Wealth Seamlessly</text>
+</svg>
