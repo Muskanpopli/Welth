@@ -35,7 +35,7 @@ export default function FinancialApp() {
           portfolioSuggestion: data.portfolioSuggestion,
         });
       } else {
-        a;
+        console.log("main");
       }
     } catch (err) {
       console.error(err);
