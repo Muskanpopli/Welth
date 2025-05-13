@@ -150,7 +150,6 @@ export async function getUserAccounts() {
 // }
 
 export async function createAccount(data) {
-  alert("login ho raha");
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
@@ -212,7 +211,6 @@ export async function createAccount(data) {
     });
 
     // ✅ EMAIL SENDING LOGIC
-    console.log("Attempting to send email to:", user.email);
 
     //     const html = `
     //   <div style="font-family:sans-serif">
