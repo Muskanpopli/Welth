@@ -35,11 +35,10 @@ export default function FinancialApp() {
           portfolioSuggestion: data.portfolioSuggestion,
         });
       } else {
-        alert(data.error || "Something went wrong.");
+        a;
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch recommendations");
     }
     setLoading(false);
   };

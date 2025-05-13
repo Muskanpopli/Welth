@@ -60,7 +60,6 @@ export function CreateAccountDrawer({ children }) {
 
   useEffect(() => {
     if (newAccount) {
-      alert(477777777);
       toast.success("Account created successfully");
       reset();
       setOpen(false);
