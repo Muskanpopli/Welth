@@ -150,16 +150,11 @@ export async function getUserAccounts() {
 // }
 
 export async function createAccount(data) {
-  alert("login ho raha");
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
     const req = await request();
-<<<<<<< HEAD
-
-=======
->>>>>>> 0b1d019d07028ebf23596e7c914ff6c98664b371
     const decision = await aj.protect(req, {
       userId,
       requested: 1,
