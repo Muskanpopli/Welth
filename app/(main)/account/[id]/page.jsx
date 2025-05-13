@@ -5,6 +5,9 @@ import { TransactionTable } from "../_components/transaction-table";
 import { notFound } from "next/navigation";
 import { AccountChart } from "../_components/account-chart";
 
+import { buttonVariants } from "@/components/ui/button";
+import { Button } from "../../../../components/ui/button";
+
 export default async function AccountPage({ params }) {
   const accountData = await getAccountWithTransactions(params.id);
 
@@ -26,14 +29,23 @@ export default async function AccountPage({ params }) {
             Account
           </p>
         </div>
-
-        <div className="text-right pb-2">
-          <div className="text-xl sm:text-2xl font-bold">
-            ${parseFloat(account.balance).toFixed(2)}
+        <div
+          className="gap-7 flex justify-center items-center
+        "
+        >
+          {parseFloat(account.balance).toFixed(2) > 500 ? (
+            <Button className="flex items-center gap-2">
+              <span className="hidden md:inline ">Invest Money</span>
+            </Button>
+          ) : null}
+          <div className="text-right pb-2">
+            <div className="text-xl sm:text-2xl font-bold">
+              ₹{parseFloat(account.balance).toFixed(2)}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {account._count.transactions} Transactions
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {account._count.transactions} Transactions
-          </p>
         </div>
       </div>
 
