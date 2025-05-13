@@ -211,7 +211,6 @@ export async function createAccount(data) {
     });
 
     // ✅ EMAIL SENDING LOGIC
-    console.log("Attempting to send email to:", user.email);
 
     //     const html = `
     //   <div style="font-family:sans-serif">
