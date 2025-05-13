@@ -13,7 +13,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {statsData.map((stat, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="text-center hover:transform hover:scale-110 transition-transform duration-300">
                 <div className="text-4xl font-bold text-blue-600 mb-2">
                   {stat.value}
                 </div>
@@ -31,7 +31,7 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuresData.map((feature, index) => (
-              <Card className="p-6" key={index}>
+              <Card className="p-6 hover:bg-blue-50 hover:transform hover:scale-102 transition-transform duration-300" key={index}>
                 <CardContent className="space-y-4 pt-4">
                   {feature.icon}
                   <h3 className="text-xl font-semibold">{feature.title}</h3>
@@ -47,9 +47,9 @@ export default function Home() {
         <section className="py-20 bg-blue-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-16">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 ">
             {howItWorksData.map((step, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="text-center hover:transform hover:scale-102 transition-transform duration-300">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   {step.icon}
                 </div>
@@ -69,9 +69,9 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonialsData.map((testimonial, index) => (
-              <Card key={index} className="p-6">
-                <CardContent className="pt-4">
-                  <div className="flex items-center mb-4">
+              <Card key={index} className="p-6 hover:bg-blue-50 hover:transform hover:scale-102 transition-transform duration-300">
+                <CardContent className="pt-4 ">
+                  <div className="flex items-center mb-4 ">
                     <Image
                       src={testimonial.image}
                       alt={testimonial.name}
@@ -79,7 +79,7 @@ export default function Home() {
                       height={40}
                       className="rounded-full"
                     />
-                    <div className="ml-4">
+                    <div className="ml-4 ">
                       <div className="font-semibold">{testimonial.name}</div>
                       <div className="text-sm text-gray-600">
                         {testimonial.role}

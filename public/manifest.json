@@ -1,0 +1,35 @@
+{
+  "short_name": "WELTH",
+  "name": "WELTH",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo-square.webp",
+      "type": "image/webp",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo-square.webp",
+      "type": "image/webp",
+      "sizes": "512x512"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "type": "image/png",
+      "form_factor": "wide",
+      "sizes": "1198x883"
+    },
+    {
+      "src": "/mobile.png",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "sizes": "527x815"
+    }
+  ]
+}
