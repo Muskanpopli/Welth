@@ -122,15 +122,26 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
         </div>
       </CardHeader>
       <CardContent>
+        {percentUsed > 80 ? (
+          <div className="text-red-700 mb-2">
+            {" "}
+            You have exceed More than 80% of your Budget
+          </div>
+        ) : percentUsed > 60 ? (
+          <div className="text-yellow-700 mb-2">
+            You have exceed More than 60% of your Budget
+          </div>
+        ) : (
+          ""
+        )}
         {initialBudget && (
           <div className="space-y-2">
             <Progress
               value={percentUsed}
               extraStyles={`${
-                // add to Progress component
-                percentUsed >= 90
+                percentUsed >= 80
                   ? "bg-red-500"
-                  : percentUsed >= 75
+                  : percentUsed >= 60
                     ? "bg-yellow-500"
                     : "bg-green-500"
               }`}
