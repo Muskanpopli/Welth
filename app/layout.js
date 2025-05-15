@@ -1,10 +1,11 @@
-import { Inter } from "next/font/google";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/700.css";
+
 import "./globals.css";
 import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 
-const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Welth",
   description: "Your all-in-one finance hub",
@@ -18,7 +19,7 @@ export default function RootLayout({ children }) {
         <head>
           <link rel="manifest" href="/manifest.json" />
         </head>
-        <body className={`${inter.className}`}>
+        <body className={"font-sans"}>
           <Header />
           <main className="min-h-screen">{children}</main>
           <Toaster richColors />
