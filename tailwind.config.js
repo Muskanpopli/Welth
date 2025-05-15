@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
   	extend: {
+		 fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],  // override default sans
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
