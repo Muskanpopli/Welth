@@ -8,11 +8,23 @@ export default function FinancialApp() {
   const [results, setResults] = useState(null);
   const [allStocks, setAllStocks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [portfolioType, setPortfolioType] = useState("moderate");
-
   const [investmentAmountNumber, setInvestmentAmountNumber] = useState(0);
+
+  // Loan calculator state
+  const [loanAmount, setLoanAmount] = useState("");
+  const [tenure, setTenure] = useState("");
+  const [income, setIncome] = useState("");
+  const [creditScore, setCreditScore] = useState("");
+  const [investmentAmounts, setInvestmentAmounts] = useState("");
+  const [loanResult, setLoanResult] = useState(null);
+  const [loanLoading, setLoanLoading] = useState(false);
+
   const fetchRecommendations = async () => {
     setLoading(true);
+    setError(null);
+
     try {
       const response = await fetch(
         "https://financial-server-9zb8.onrender.com/api/stock-recommendations",
@@ -26,25 +38,29 @@ export default function FinancialApp() {
         }
       );
 
-      console.log(response);
       const data = await response.json();
+
       if (data.success) {
         setResults({
           investmentAmount: data.investmentAmount,
-          category: data.category,
+          investmentLevel: data.investmentLevel,
+          riskCategory: data.riskCategory,
           recommendations: data.recommendations,
-          portfolioSuggestion: data.portfolioSuggestion,
+          portfolioGuidelines: data.portfolioGuidelines,
         });
       } else {
-        console.log("main");
+        setError(data.error || "Failed to fetch recommendations");
       }
     } catch (err) {
       console.error(err);
+      setError("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const fetchAllStocks = async () => {
+    setLoading(true);
     try {
       const res = await fetch(
         "https://financial-server-9zb8.onrender.com/api/all-stocks"
@@ -52,9 +68,14 @@ export default function FinancialApp() {
       const data = await res.json();
       if (data.success) {
         setAllStocks(data.stocks);
+      } else {
+        setError("Failed to fetch stocks data");
       }
     } catch (error) {
       console.error("Error fetching all stocks:", error);
+      setError("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,7 +83,7 @@ export default function FinancialApp() {
     if (activeTab === "allStocks" && allStocks.length === 0) {
       fetchAllStocks();
     }
-  }, [activeTab]);
+  }, [activeTab, allStocks.length]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -84,31 +105,44 @@ export default function FinancialApp() {
   };
 
   const formatRiskLabel = (risk) => {
+    // Normalize risk text to handle case inconsistencies
+    const normalizedRisk = typeof risk === "string" ? risk.toLowerCase() : "";
+
     const classes = {
-      Low: "bg-green-100 text-green-800",
-      "Low-Medium": "bg-teal-100 text-teal-800",
-      Medium: "bg-blue-100 text-blue-800",
-      "Medium-High": "bg-orange-100 text-orange-800",
-      High: "bg-red-100 text-red-800",
+      low: "bg-green-100 text-green-800",
+      "low-medium": "bg-teal-100 text-teal-800",
+      medium: "bg-blue-100 text-blue-800",
+      "medium-high": "bg-orange-100 text-orange-800",
+      high: "bg-red-100 text-red-800",
     };
+
+    const displayRisk = typeof risk === "string" ? risk : "Unknown";
+    const riskClass = classes[normalizedRisk] || "bg-gray-100 text-gray-800";
+
     return (
       <span
-        className={`px-2 py-1 text-xs font-medium rounded-full ${classes[risk] || "bg-gray-100 text-gray-800"}`}
+        className={`px-2 py-1 text-xs font-medium rounded-full ${riskClass}`}
       >
-        {risk}
+        {displayRisk}
       </span>
     );
   };
 
-  const [loanAmount, setLoanAmount] = useState("");
-  const [interestRate, setInterestRate] = useState("");
-  const [tenure, setTenure] = useState("");
-  const [income, setIncome] = useState("");
-  const [creditScore, setCreditScore] = useState("");
-  const [investmentAmounts, setInvestmentAmounts] = useState("");
-  const [loanResult, setLoanResult] = useState(null);
-
   const handleLoanCalculation = async () => {
+    if (
+      !income ||
+      !loanAmount ||
+      !creditScore ||
+      !tenure ||
+      !investmentAmounts
+    ) {
+      setError("Please fill in all loan calculator fields");
+      return;
+    }
+
+    setLoanLoading(true);
+    setError(null);
+
     try {
       const response = await fetch(
         "https://financial-server-9zb8.onrender.com/api/loan-evaluation",
@@ -129,15 +163,24 @@ export default function FinancialApp() {
       if (data.success) {
         setLoanResult(data);
       } else {
-        console.error("Calculation failed:", data.error);
+        setError(data.error || "Calculation failed");
       }
     } catch (error) {
       console.error("API error:", error);
+      setError("Network error. Please try again later.");
+    } finally {
+      setLoanLoading(false);
     }
   };
 
+  // Show portfolio description based on the selected type
+  const getPortfolioDescription = () => {
+    if (!results?.portfolioGuidelines) return "";
+    return results.portfolioGuidelines[portfolioType] || "";
+  };
+
   return (
-    <div className="min-h-screen mt-[-50px] bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <header className="bg-indigo-700 shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex justify-center items-center">
@@ -164,14 +207,27 @@ export default function FinancialApp() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 text-red-700">
+            <p>{error}</p>
+          </div>
+        )}
+
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="border-b flex">
             {["stockRecommendations", "loanCalculator", "allStocks"].map(
               (tab) => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-4 font-medium text-sm ${activeTab === tab ? "text-indigo-700 border-b-2 border-indigo-700" : "text-gray-500 hover:text-gray-700"}`}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setError(null);
+                  }}
+                  className={`px-4 py-4 font-medium text-sm ${
+                    activeTab === tab
+                      ? "text-indigo-700 border-b-2 border-indigo-700"
+                      : "text-gray-500 hover:text-gray-700"
+                  }`}
                 >
                   {tab === "stockRecommendations"
                     ? "Stock Recommendations"
@@ -183,6 +239,7 @@ export default function FinancialApp() {
             )}
           </div>
 
+          {/* Stock Recommendations Tab */}
           {activeTab === "stockRecommendations" && (
             <div className="p-6">
               <form
@@ -191,7 +248,7 @@ export default function FinancialApp() {
               >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Investment Amount (INR)
+                    Investment Amount (₹)
                   </label>
                   <input
                     type="text"
@@ -211,7 +268,11 @@ export default function FinancialApp() {
                       <div
                         key={type}
                         onClick={() => setPortfolioType(type)}
-                        className={`cursor-pointer px-4 py-2 border rounded ${portfolioType === type ? "bg-indigo-100 border-indigo-600 text-indigo-800" : "border-gray-300"}`}
+                        className={`cursor-pointer px-4 py-2 border rounded ${
+                          portfolioType === type
+                            ? "bg-indigo-100 border-indigo-600 text-indigo-800"
+                            : "border-gray-300"
+                        }`}
                       >
                         {type.charAt(0).toUpperCase() + type.slice(1)}
                       </div>
@@ -222,50 +283,220 @@ export default function FinancialApp() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
+                  className={`w-full py-2 rounded-md ${
+                    loading
+                      ? "bg-indigo-400 cursor-not-allowed"
+                      : "bg-indigo-600 hover:bg-indigo-700"
+                  } text-white`}
                 >
-                  {loading ? "Processing..." : "Get Recommendations"}
+                  {loading ? (
+                    <span className="flex items-center justify-center">
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : (
+                    "Get Recommendations"
+                  )}
                 </button>
               </form>
 
               {results && (
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold">
-                    Investment: {results.investmentAmount}
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Portfolio Suggestion:{" "}
-                    {results.portfolioSuggestion[portfolioType]}
-                  </p>
+                <div className="mt-8 bg-white rounded-lg border border-gray-200 p-6">
+                  <div className="mb-6">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      Investment Summary
+                    </h3>
+                    <div className="mt-4 grid md:grid-cols-3 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">
+                          Investment Amount
+                        </p>
+                        <p className="text-lg font-medium">
+                          {results.investmentAmount}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">
+                          Investment Level
+                        </p>
+                        <p className="text-lg font-medium capitalize">
+                          {results.investmentLevel}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm text-gray-500">Risk Category</p>
+                        <p className="text-lg font-medium capitalize">
+                          {results.riskCategory}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
+                  <div className="mb-6 bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                    <h4 className="font-medium text-indigo-800">
+                      Portfolio Guideline
+                    </h4>
+                    <p className="text-indigo-700 mt-1">
+                      {getPortfolioDescription()}
+                    </p>
+                  </div>
+
+                  <h4 className="text-lg font-semibold mb-3">
+                    Recommended Stocks
+                  </h4>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-300 bg-white shadow rounded-lg">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Stock
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Price
+                          </th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Risk
+                          </th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Max Shares
+                          </th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Total Investment
+                          </th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            % of Total
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {results.recommendations &&
+                          results.recommendations.map((stock, index) => (
+                            <tr
+                              key={index}
+                              className={
+                                index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                              }
+                            >
+                              <td className="px-4 py-3">
+                                <div className="font-medium text-gray-900">
+                                  {stock.symbol}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                  {stock.name}
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-gray-900">
+                                {stock.price}
+                              </td>
+                              <td className="px-4 py-3">
+                                {formatRiskLabel(stock.risk)}
+                              </td>
+                              <td className="px-4 py-3 text-right font-medium text-gray-900">
+                                {stock.maxShares}
+                              </td>
+                              <td className="px-4 py-3 text-right text-gray-900">
+                                {stock.totalInvestment}
+                              </td>
+                              <td className="px-4 py-3 text-right text-gray-900">
+                                {stock.percentOfTotal}%
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* All Stocks Tab */}
+          {activeTab === "allStocks" && (
+            <div className="p-6">
+              <h2 className="text-xl font-semibold mb-4">
+                All Available Stocks
+              </h2>
+
+              {loading ? (
+                <div className="flex justify-center py-12">
+                  <svg
+                    className="animate-spin h-10 w-10 text-indigo-600"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-300 bg-white shadow rounded-lg">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-2 text-left">Stock</th>
-                        <th className="px-4 py-2 text-left">Price</th>
-                        <th className="px-4 py-2 text-left">Risk</th>
-                        <th className="px-4 py-2 text-right">Shares</th>
-                        <th className="px-4 py-2 text-right">% of Total</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Symbol
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Name
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Risk
+                        </th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Price
+                        </th>
                       </tr>
                     </thead>
-                    <tbody>
-                      {results.recommendations.map((stock) => (
-                        <tr key={stock.symbol} className="border-t">
-                          <td className="px-4 py-2">
-                            {stock.symbol}{" "}
-                            <div className="text-sm text-gray-500">
-                              {stock.name}
-                            </div>
+                    <tbody className="divide-y divide-gray-200">
+                      {allStocks.map((stock, index) => (
+                        <tr
+                          key={index}
+                          className={
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          }
+                        >
+                          <td className="px-4 py-3 font-medium text-gray-900">
+                            {stock.symbol}
                           </td>
-                          <td className="px-4 py-2">{stock.price}</td>
-                          <td className="px-4 py-2">
+                          <td className="px-4 py-3 text-gray-900">
+                            {stock.name}
+                          </td>
+                          <td className="px-4 py-3">
                             {formatRiskLabel(stock.risk)}
                           </td>
-                          <td className="px-4 py-2 text-right">
-                            {stock.maxShares}
-                          </td>
-                          <td className="px-4 py-2 text-right">
-                            {stock.percentOfTotal}%
+                          <td className="px-4 py-3 text-right text-gray-900">
+                            {typeof stock.price === "number"
+                              ? `₹${stock.price.toLocaleString("en-IN")}`
+                              : stock.price}
                           </td>
                         </tr>
                       ))}
@@ -273,39 +504,16 @@ export default function FinancialApp() {
                   </table>
                 </div>
               )}
+
+              {allStocks.length === 0 && !loading && (
+                <div className="text-center py-8 text-gray-500">
+                  No stocks available at the moment.
+                </div>
+              )}
             </div>
           )}
 
-          {activeTab === "allStocks" && (
-            <div className="p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                All Available Stocks
-              </h2>
-              <table className="min-w-full divide-y divide-gray-300 bg-white shadow rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Symbol</th>
-                    <th className="px-4 py-2 text-left">Name</th>
-                    <th className="px-4 py-2 text-left">Risk</th>
-                    <th className="px-4 py-2 text-left">Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allStocks.map((stock) => (
-                    <tr key={stock.symbol} className="border-t">
-                      <td className="px-4 py-2">{stock.symbol}</td>
-                      <td className="px-4 py-2">{stock.name}</td>
-                      <td className="px-4 py-2">
-                        {formatRiskLabel(stock.risk)}
-                      </td>
-                      <td className="px-4 py-2">{stock.price}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
+          {/* Loan Calculator Tab */}
           {activeTab === "loanCalculator" && (
             <div className="p-6 space-y-4">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
@@ -313,116 +521,220 @@ export default function FinancialApp() {
               </h2>
 
               <p className="text-gray-600">
-                This feature helps evaluate loan applications and recommend
-                investment options.
+                This calculator helps evaluate loan applications and recommend
+                investment options based on your financial profile.
               </p>
 
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
-                  <label className="block text-sm text-gray-700">
-                    Income (₹)
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Monthly Income (₹)
                   </label>
                   <input
                     type="number"
                     value={income}
                     onChange={(e) => setIncome(e.target.value)}
-                    className="w-full border rounded p-2"
+                    placeholder="50,000"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Loan Amount (₹)
                   </label>
                   <input
                     type="number"
                     value={loanAmount}
                     onChange={(e) => setLoanAmount(e.target.value)}
-                    className="w-full border rounded p-2"
+                    placeholder="500,000"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Credit Score
                   </label>
                   <input
                     type="number"
                     value={creditScore}
                     onChange={(e) => setCreditScore(e.target.value)}
-                    className="w-full border rounded p-2"
+                    placeholder="750"
+                    min="300"
+                    max="900"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Loan Tenure (years)
                   </label>
                   <input
                     type="number"
                     value={tenure}
                     onChange={(e) => setTenure(e.target.value)}
-                    className="w-full border rounded p-2"
+                    placeholder="5"
+                    min="1"
+                    max="30"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Investment Amount (₹)
                   </label>
                   <input
                     type="number"
                     value={investmentAmounts}
                     onChange={(e) => setInvestmentAmounts(e.target.value)}
-                    className="w-full border rounded p-2"
+                    placeholder="100,000"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
 
               <button
                 onClick={handleLoanCalculation}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                disabled={loanLoading}
+                className={`mt-4 px-4 py-2 rounded ${
+                  loanLoading
+                    ? "bg-indigo-400 cursor-not-allowed"
+                    : "bg-indigo-600 hover:bg-indigo-700"
+                } text-white`}
               >
-                Evaluate Loan
+                {loanLoading ? (
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Processing...
+                  </span>
+                ) : (
+                  "Evaluate Loan"
+                )}
               </button>
 
               {loanResult && (
-                <div className="mt-6 border rounded p-4 bg-gray-50 space-y-4">
-                  <h3 className="font-semibold text-lg mb-2">
-                    Loan Evaluation Summary
-                  </h3>
-                  <p>
-                    <strong>Loan Amount:</strong> {loanResult.loanAmount}
-                  </p>
-                  <p>
-                    <strong>Loan Risk:</strong> {loanResult.loanEvaluation}
-                  </p>
-                  <p>
-                    <strong>Interest Rate:</strong> {loanResult.interestRate}
-                  </p>
-                  <p>
-                    <strong>Loan to Income Ratio:</strong>{" "}
-                    {loanResult.loanToIncome}
-                  </p>
-                  <p>
-                    <strong>Monthly Payment:</strong>{" "}
-                    {loanResult.monthlyPayment}
-                  </p>
+                <div className="mt-6 border rounded-lg overflow-hidden">
+                  <div className="bg-indigo-50 p-4 border-b">
+                    <h3 className="font-semibold text-lg text-indigo-800">
+                      Loan Evaluation Summary
+                    </h3>
+                  </div>
 
-                  <h4 className="font-semibold mt-4">
-                    Investment Recommendations
-                  </h4>
-                  <p>
-                    <strong>Category:</strong> {loanResult.category}
-                  </p>
-                  <ul className="list-disc ml-6">
-                    {loanResult.recommendations.map((stock, index) => (
-                      <li key={index}>
-                        {stock.symbol}: {stock.quantity} shares at {stock.price}{" "}
-                        each (Total: {stock.totalInvestment})
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="p-4 bg-white">
+                    <div className="grid md:grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <p className="text-sm text-gray-500">Loan Amount</p>
+                        <p className="text-lg font-medium">
+                          {loanResult.loanAmount}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Interest Rate</p>
+                        <p className="text-lg font-medium">
+                          {loanResult.interestRate}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Monthly Payment</p>
+                        <p className="text-lg font-medium">
+                          {loanResult.monthlyPayment}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          Loan to Income Ratio
+                        </p>
+                        <p className="text-lg font-medium">
+                          {loanResult.loanToIncome}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mb-6">
+                      <div
+                        className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                          loanResult.loanEvaluation === "Low Risk"
+                            ? "bg-green-100 text-green-800"
+                            : loanResult.loanEvaluation === "Medium Risk"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {loanResult.loanEvaluation}
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-lg mb-3">
+                      Investment Recommendations
+                    </h4>
+                    <p className="mb-3">
+                      <span className="font-medium">Category:</span>{" "}
+                      <span className="capitalize">{loanResult.category}</span>
+                    </p>
+
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-300 bg-white shadow rounded-lg">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Symbol
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Price
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Quantity
+                            </th>
+                            <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Total
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                          {loanResult.recommendations.map((stock, index) => (
+                            <tr
+                              key={index}
+                              className={
+                                index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                              }
+                            >
+                              <td className="px-4 py-3 font-medium text-gray-900">
+                                {stock.symbol}
+                              </td>
+                              <td className="px-4 py-3">{stock.price}</td>
+                              <td className="px-4 py-3 text-right">
+                                {stock.quantity}
+                              </td>
+                              <td className="px-4 py-3 text-right font-medium">
+                                {stock.totalInvestment}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
