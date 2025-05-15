@@ -21,6 +21,7 @@ export default function FinancialApp() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             amount: investmentAmountNumber,
+            category: portfolioType,
           }),
         }
       );
